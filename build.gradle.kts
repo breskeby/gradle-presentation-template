@@ -3,6 +3,6 @@ plugins {
 }
 
 presentation {
-    githubUserName.set("melix")
-    githubRepoName.set("gradle-presentation-template")
+    githubUserName.set("breskeby")
+    githubRepoName.set("ImprovingBuildPerformancewithGradle5")
 }

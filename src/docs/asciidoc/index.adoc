@@ -10,55 +10,42 @@ ifndef::sourcedir[:sourcedir: ../java]
 :title-slide-transition-speed: fast
 :icons: font
 
-= : Switching to Gradle
+= : Improving Android and Java Build performance with Gradle 5
 
-+++<h2>+++
-Maturity, performance and pleasure!
-+++</h2>+++
+René Gröschke (@breskeby) - Gradle Inc.
 
-Cédric Champeau (@CedricChampeau) & Louis Jacomet (@ljacomet) - Gradle Inc.
-
-== Who are we?
+== Whos talking?
 
 [%notitle]
-=== Cedric
+=== René
 [source,groovy]
 ----
 speaker {
-    name 'Cédric Champeau'
+    name 'René Gröschke'
+    home 'Berlin'
     company 'Gradle Inc'
-    oss 'Apache Groovy committer',
-    successes 'Static type checker',
-              'Static compilation',
-              'Traits',
-              'Markup template engine',
-              'DSLs'
-        failures Stream.of(bugs),
-        twitter '@CedricChampeau',
-        github 'melix',
-        extraDescription '''Groovy in Action 2 co-author
-Misc OSS contribs'''
-}
-----
-
-[%notitle]
-=== Louis
-[source,groovy]
-----
-speaker {
-    name 'Louis Jacomet'
-    company 'Gradle Inc'
-    past 'Terracotta / Ehcache',
-              'Freelance consultant',
-        failures Stream.of(bugs),
-        twitter '@ljacomet',
-        github 'ljacomet',
-        extraDescription '''Not fully figured out
-how to stay out of management?!?'''
+    twitter '@breskeby'
+    github 'breskeby'
 }
 ----
 
 include::chapters/about-gradle.adoc[]
+
+include::chapters/intro.adoc[]
+
+include::chapters/general-advice.adoc[]
+
+include::chapters/where-is-the-problem.adoc[]
+
+include::chapters/configuration.adoc[]
+
+// include::chapters/reduce-build-bottleneck.adoc[]
+
+include::chapters/incrementality.adoc[]
+
+include::chapters/compile-avoidance.adoc[]
+
+include::chapters/caching.adoc[]
 
 == A screencast
 
@@ -75,13 +62,3 @@ screencast:step1[]
 ** Build comparison
 
 === Sessions at Devoxx BE
-
-* https://dvbe18.confinabox.com/talk/DBF-1594/project_versioning_like_a_git[Project versioning like a git]
-** Matthieu Brouillard
-** Wednesday, 13:30 - 13:45 Room 5
-
-* https://dvbe18.confinabox.com/talk/VFH-6802/Improving_Android_Build_Performance[Improving Android Build performance]
-** Cédric Champeau
-**  Thursday, 16:30 - 17:15 Room 3
-
-

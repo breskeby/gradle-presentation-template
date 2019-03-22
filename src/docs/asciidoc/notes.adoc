@@ -1,0 +1,7 @@
+intro:
+- how many of you using android
+- how many of you are java developers
+- no free lunch to make the build faster. some work is required.
+
+gradle-profiler:
+- TODO: example report

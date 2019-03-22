@@ -1,0 +1,168 @@
+=== Configuration Time
+
+applying plugins
+
+Evaluate build scripts
+
+Running `afterEvaluate{}` blocks
+
+// TODO:
+// > triggered by running any task
+// > Even gradlew help/tasks
+// > Android Studio sync
+
+// TODO:
+// - scan example
+// - configuration resolution during configuration phase(eager resolution)
+
+
+=== Resolution at configuration time
+
+image::resolution-in-config.png[the build lifecycle, 1100, 500]
+
+=== Resolution at configuration time
+
+```
+task fatJar(type: Jar) {
+    baseName = 'all-in-one-jar'
+    from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    with jar
+    classifier = 'uber-jar'
+}
+```
+
+Eager resolution
+
+=== Resolution at configuration time
+
+```
+task fatJar(type: Jar) {
+    baseName = 'all-in-one-jar'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+    classifier = 'uber-jar'
+}
+```
+
+Use lazy evaluation instead
+
+=== I/O at configuration time
+
+image::expensive-task-config.png[expensive task creation, 1100, 500]
+
+That build script seems expensive
+
+=== I/O at configuration time
+
+```
+task projectStats {
+    def statsFile = new File(buildDir, 'stats.txt')
+    statsFile.parentFile.mkdirs()
+    statsFile.text = """
+    SourceFiles:  ${sourceSets.main.java.size()}
+    Source size:  ${sourceSets.main.java.collect{it.text.bytes}.flatten().sum()} bytes
+    """
+}
+```
+
+Careful when writing custom Tasks!
+
+=== I/O at configuration time
+
+```
+task projectStats {
+    def statsFile = new File(buildDir, 'stats.txt')
+    input.files sourceSet.main.java
+    outputs.file statsFile
+
+    doLast {
+        statsFile.parentFile.mkdirs()
+        statsFile.text = """
+        SourceFiles:  ${sourceSets.main.java.size()}
+        Source size:  ${sourceSets.main.java.collect{it.text.bytes}.flatten().sum()} bytes
+        """
+    }
+}
+```
+
+Don't forget `doLast{}`
+
+=== I/O at configuration time
+
+```
+task projectStats(type: ProjectStats) {
+    statsFile = new File(buildDir, 'stats.txt')
+    sources = sourceSet.main.java
+}
+
+class ProjectStats extends DefaultTask {
+
+    @InputFiles
+    FileCollection sources
+
+    @OutputFile
+    File statsFile
+
+    @TaskAction def stats(){
+        statsFile.text = """
+        SourceFiles:  ${sourceSets.main.java.size()}
+        Source size:  ${sourceSets.main.java.collect{it.text.bytes}.flatten().sum()} bytes
+        """
+    }
+}
+```
+
+    Don't forget `doLast{}`
+
+
+=== Inefficient Plugins
+
+```
+// version.gradle
+def out = new ByteArrayOutputStream()
+exec {
+    commandLine 'git','rev-parse,'HEAD'
+    standardOutput = out
+    workingDir = rootDir
+}
+version = new String(out.toByteArray())
+
+// root 'build.gradle'
+
+allprojects {
+    apply from:'$rootDir/version.gradle'
+}
+```
+
+=== Reuse expensive logic
+
+```
+// version.gradle
+as before
+
+// root 'build.gradle'
+
+apply from:"$rootDir/version.gradle"
+
+subprojects {
+    version = rootProject.version
+}
+```
+
+=== Variant explosion
+
+```
+variantFilter { variant ->
+    def flavorName = variant.flavors[0].name
+    def freeFlavor = flavorName == 'free'
+    if(!freeFlavor && variant.buildType.name == 'release'){
+        variant.ignore = true
+    }
+}
+```
+
+=== Configuration Time
+
+- Avoid dependency resolution
+- Avoid I/O
+- Dont repeat yourself

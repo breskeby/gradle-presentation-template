@@ -1,0 +1,63 @@
+== General Advice
+
+=== Process
+
+1. Define scenario to improve
+2. Profile scenario
+3. Identify biggest bottleneck
+4. Fix bottleneck
+5. Verify fix by measurement
+6. Repeat
+
+=== Automate your measurements
+
+```# Scenarios are run in alphabetical order
+assemble {
+    # Run the 'assemble' task
+    tasks = ["assemble"]
+}
+clean_build {
+    versions = ["5.0", "5.3", "/Users/me/gradle"]
+    tasks = ["build"]
+    gradle-args = ["--parallel"]
+    system-properties {
+        key = "value"
+    }
+    cleanup-tasks = ["clean"]
+
+    run-using = tooling-api // can also be "cli", "no-daemon"
+    warm-ups = 10
+}
+```
+
+https://github.com/gradle/gradle-profiler
+
+=== Stay Up-To-Date
+
+- Gradle wrapper
+
+```
+./gradlew wrapper --gradle-version 5.3
+```
+
+- android version
+- thirdparty plugins
+- annotation processors
+
+=== JVM tuning
+
+Provide enough heap space
+
+Other tweaks often do more harm than good
+
+Spend your time on structural improvements
+
+=== The Gradle Daemon
+
+The gradle daemon is enabled by default
+
+Provides a number in in-memory caches
+
+Useful for repeated builds
+
+Do not disable it!
